@@ -209,6 +209,12 @@ footer a{color:var(--gold);text-decoration:none;font-weight:600;}
   .fine{margin-left:auto;margin-right:auto;text-align:center;font-size:10.5px;line-height:16px;}
   .mobile-bar{left:14px;right:14px;bottom:calc(10px + env(safe-area-inset-bottom));}
 }
+
+/* video */
+.video-frame{max-width:880px;margin:0 auto;background:#0B0B10;border-radius:24px;padding:14px;box-shadow:0 30px 60px rgba(11,11,16,.25);}
+.video-frame video{width:100%;height:auto;display:block;border-radius:14px;background:#000;}
+.video-cap{text-align:center;font-size:13px;color:var(--mut);margin-top:16px;}
+@media(max-width:640px){.video-frame{padding:9px;border-radius:19px;}.video-frame video{border-radius:11px;}}
 </style>
 </head>
 <body>
@@ -336,6 +342,26 @@ footer a{color:var(--gold);text-decoration:none;font-weight:600;}
         <a href="https://allypremierprotection.net" target="_blank" rel="noopener"><img src="major-guard-diagram.jpg" alt="Ally Major Guard coverage diagram"></a>
         <div style="font-size:12px;color:#8a8f98;padding-top:8px;">Ally Premier Protection Major Guard &mdash; coverage overview. Tap the diagram for full details at allypremierprotection.net.</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="video" style="padding-top:20px;">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Real Life &bull; Roadside</div>
+      <h2>A flat doesn&rsquo;t care about your plans.</h2>
+      <p>Highway shoulder, traffic flying by, somewhere to be. This is the moment 24/7 roadside assistance and Tire &amp; Wheel coverage earn their keep.</p>
+    </div>
+    <div class="video-frame reveal">
+      <video controls playsinline preload="metadata" poster="roadside-poster.jpg">
+        <source src="roadside-flat-tire.mp4" type="video/mp4">
+        Your browser can&rsquo;t play this video &mdash; but you can still text us at 904-236-0709.
+      </video>
+    </div>
+    <p class="video-cap">Real roadside footage &mdash; a flat tire handled on the highway shoulder. With Major Guard, roadside help is one call away, 24/7.</p>
+    <div style="text-align:center;margin-top:22px;">
+      <a class="btn btn-dark" href="#addons">See Tire &amp; Wheel Coverage &mdash; $950</a>
     </div>
   </div>
 </section>
