@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get Your Exact Quote — Randy Marion Cadillac of Jacksonville</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#ECEEF1;font-family:Arial,Helvetica,sans-serif;color:#0B0B10;-webkit-text-size-adjust:100%;}
+  .wrap{max-width:600px;margin:0 auto;padding:0 14px 40px 14px;}
+  .header{background:#ffffff;text-align:center;padding:26px 20px 18px 20px;border-bottom:3px solid #C6A15B;}
+  .header img{width:300px;max-width:82%;height:auto;}
+  .header .sub{font-size:10px;letter-spacing:3px;color:#8a8f98;text-transform:uppercase;padding-top:8px;}
+  .hero{background:#0B0B10;text-align:center;padding:38px 26px 30px 26px;}
+  .hero .eyebrow{font-size:11px;letter-spacing:3.5px;color:#C6A15B;text-transform:uppercase;padding-bottom:14px;}
+  .hero h1{font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:34px;line-height:40px;color:#ffffff;}
+  .hero h1 span{color:#C6A15B;}
+  .hero p{font-size:15px;line-height:23px;color:#C9CCD4;padding-top:14px;max-width:440px;margin:0 auto;}
+  .card{background:#ffffff;border-radius:0 0 18px 18px;padding:28px 24px 26px 24px;box-shadow:0 10px 30px rgba(11,11,16,.08);}
+  label{display:block;font-size:11px;font-weight:bold;letter-spacing:2px;color:#7c828c;text-transform:uppercase;margin:18px 0 7px 2px;}
+  label:first-of-type{margin-top:2px;}
+  input,select{width:100%;padding:14px 13px;font-size:16px;font-family:Arial,Helvetica,sans-serif;color:#0B0B10;background:#F7F7F9;border:1px solid #E0E1E6;border-radius:10px;appearance:none;-webkit-appearance:none;}
+  input:focus,select:focus{outline:2px solid #C6A15B;border-color:#C6A15B;background:#ffffff;}
+  .row{display:flex;gap:12px;}
+  .row>div{flex:1;}
+  .checks{margin-top:6px;}
+  .checks label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:normal;letter-spacing:0;text-transform:none;color:#22252b;margin:0;padding:9px 2px;cursor:pointer;}
+  .checks input{width:19px;height:19px;padding:0;accent-color:#B08D4C;flex:none;}
+  button{width:100%;margin-top:24px;padding:17px;background:#C6A15B;color:#0B0B10;border:none;border-radius:12px;font-size:15px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:Arial,Helvetica,sans-serif;}
+  button:disabled{opacity:.6;}
+  .note{text-align:center;font-size:12.5px;line-height:19px;color:#8a8f98;padding-top:14px;}
+  .note a{color:#B08D4C;font-weight:bold;text-decoration:none;}
+  .success,.error{display:none;text-align:center;padding:14px 4px 6px 4px;}
+  .success .ring{display:inline-block;width:56px;height:56px;line-height:52px;border:2px solid #C6A15B;border-radius:50%;color:#B08D4C;font-size:26px;font-weight:bold;}
+  .success h2{font-family:Georgia,serif;font-weight:normal;font-size:26px;padding-top:16px;}
+  .success p,.error p{font-size:14.5px;line-height:22px;color:#5b6068;padding-top:10px;max-width:420px;margin:0 auto;}
+  .success a,.error a{color:#B08D4C;font-weight:bold;text-decoration:none;}
+  .footer{text-align:center;font-size:11px;line-height:17px;color:#a2a7b0;padding:22px 30px 0 30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <img src="randy-marion-cadillac-logo.png" alt="Cadillac | Randy Marion">
+    <div class="sub">Randy Marion Cadillac &#8226; Jacksonville</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">Protection Quote</div>
+    <h1>Your exact quote,<br><span>built from your vehicle.</span></h1>
+    <p>Plan pricing depends on your vehicle and miles. Tell us what you drive and we will put together your exact price for prepaid maintenance, a vehicle service contract, and add-ons.</p>
+  </div>
+
+  <div class="card">
+    <form id="quoteForm" novalidate>
+      <label for="name">Your Name *</label>
+      <input id="name" name="Name" type="text" autocomplete="name" placeholder="First and last name" required>
+
+      <label for="phone">Cell Phone *</label>
+      <input id="phone" name="Phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Best number to text your quote" required>
+
+      <div class="row">
+        <div>
+          <label for="year">Year *</label>
+          <select id="year" name="Year" required>
+            <option value="">Select</option>
+          </select>
+        </div>
+        <div>
+          <label for="make">Make *</label>
+          <select id="make" name="Make" required>
+            <option value="">Select</option>
+            <option selected>Cadillac</option>
+            <option>Chevrolet</option><option>GMC</option><option>Ford</option>
+            <option>Lincoln</option><option>Jeep</option><option>Dodge</option>
+            <option>Ram</option><option>Toyota</option><option>Honda</option>
+            <option>BMW</option><option>Mercedes-Benz</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label for="model">Model *</label>
+          <input id="model" name="Model" type="text" placeholder="e.g. Escalade" required>
+        </div>
+        <div>
+          <label for="miles">Current Miles *</label>
+          <input id="miles" name="Miles" type="number" inputmode="numeric" min="0" max="999999" placeholder="e.g. 45200" required>
+        </div>
+      </div>
+
+      <label>I'm Interested In (optional)</label>
+      <div class="checks" id="interests">
+        <label><input type="checkbox" value="Prepaid Maintenance (from $999)"> Prepaid Maintenance — from $999</label>
+        <label><input type="checkbox" value="Vehicle Service Contract (Major Guard, 0% financing)"> Vehicle Service Contract — Major Guard, 0% financing</label>
+        <label><input type="checkbox" value="Tire and Wheel Coverage ($950)"> Tire &amp; Wheel Coverage — $950</label>
+        <label><input type="checkbox" value="Key Replacement ($450)"> Key Replacement — $450</label>
+        <label><input type="checkbox" value="Ding and Dent ($600)"> Ding &amp; Dent — $600</label>
+      </div>
+
+      <button type="submit" id="sendBtn">Send My Vehicle Info</button>
+      <div class="note">Goes directly to our team at Randy Marion Cadillac of Jacksonville.<br>Prefer to text? <a href="sms:+19042360709">Text 904-236-0709</a></div>
+    </form>
+
+    <div class="success" id="successBox">
+      <div class="ring">&#187;</div>
+      <h2>You're in.</h2>
+      <p>Your vehicle info was sent to our team at Randy Marion Cadillac. We'll reach out with your exact quote. Want it faster? <a href="sms:+19042360709">Text us at 904-236-0709</a>.</p>
+    </div>
+
+    <div class="error" id="errorBox">
+      <h2 style="font-family:Georgia,serif;font-weight:normal;font-size:24px;">Something didn't go through</h2>
+      <p>Please try again, or just text your year, make, model and miles to <a href="sms:+19042360709">904-236-0709</a> and we'll take it from there.</p>
+    </div>
+  </div>
+
+  <div class="footer">Randy Marion Cadillac of Jacksonville &#8226; 4700 Southside Blvd, Jacksonville, FL 32216<br>Prepaid maintenance from $999 &#8226; Vehicle service contracts with 0% financing available</div>
+</div>
+
+<script>
+  var yearSel = document.getElementById('year');
+  var now = new Date().getFullYear();
+  for (var y = now + 1; y >= 2008; y--) {
+    var o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o);
+  }
+  var older = document.createElement('option'); older.value = '2007 or older'; older.textContent = '2007 or older'; yearSel.appendChild(older);
+
+  document.getElementById('quoteForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var form = e.target;
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    var btn = document.getElementById('sendBtn');
+    btn.disabled = true; btn.textContent = 'Sending...';
+
+    var interests = [];
+    document.querySelectorAll('#interests input:checked').forEach(function (c) { interests.push(c.value); });
+
+    var year = document.getElementById('year').value,
+        make = document.getElementById('make').value,
+        model = document.getElementById('model').value,
+        miles = document.getElementById('miles').value;
+
+    var payload = {
+      _subject: 'Protection Quote Request - ' + year + ' ' + make + ' ' + model + ' (' + Number(miles).toLocaleString() + ' mi)',
+      _template: 'table',
+      Name: document.getElementById('name').value,
+      Phone: document.getElementById('phone').value,
+      Year: year, Make: make, Model: model,
+      Miles: Number(miles).toLocaleString(),
+      'Interested In': interests.length ? interests.join('; ') : 'Not specified'
+    };
+
+    fetch('https://formsubmit.co/ajax/aaugustin@randymarion.com', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r.ok) throw new Error('send failed');
+      form.style.display = 'none';
+      document.getElementById('successBox').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = 'Send My Vehicle Info';
+      document.getElementById('errorBox').style.display = 'block';
+    });
+  });
+</script>
+</body>
+</html>
