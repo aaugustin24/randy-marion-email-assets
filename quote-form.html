@@ -23,9 +23,15 @@
   input:focus,select:focus{outline:2px solid #C6A15B;border-color:#C6A15B;background:#ffffff;}
   .row{display:flex;gap:12px;}
   .row>div{flex:1;}
-  .checks{margin-top:6px;}
-  .checks label{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:normal;letter-spacing:0;text-transform:none;color:#22252b;margin:0;padding:9px 2px;cursor:pointer;}
-  .checks input{width:19px;height:19px;padding:0;accent-color:#B08D4C;flex:none;}
+  .checks{display:flex;flex-direction:column;gap:10px;margin-top:6px;}
+  .opt{display:flex;align-items:center;gap:13px;background:#F7F7F9;border:1.5px solid #E0E1E6;border-radius:14px;padding:15px 16px;cursor:pointer;font-size:15px;font-weight:600;color:#0B0B10;}
+  .opt input{position:absolute;opacity:0;width:1px;height:1px;}
+  .opt .box{flex:none;width:24px;height:24px;border:2px solid #C9CBD2;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;}
+  .opt.sel{background:#FBF6EA;border-color:#C6A15B;}
+  .opt.sel .box{background:#C6A15B;border-color:#C6A15B;}
+  .opt.sel .box:before{content:"\2713";}
+  .opt small{margin-left:auto;font-weight:700;color:#B08D4C;white-space:nowrap;}
+  @media(max-width:560px){ .row{flex-direction:column;gap:0;} .card{padding:26px 20px;} .hero{padding:32px 20px 26px 20px;} }
   button{width:100%;margin-top:24px;padding:17px;background:#C6A15B;color:#0B0B10;border:none;border-radius:12px;font-size:15px;font-weight:bold;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:Arial,Helvetica,sans-serif;}
   button:disabled{opacity:.6;}
   .note{text-align:center;font-size:12.5px;line-height:19px;color:#8a8f98;padding-top:14px;}
@@ -90,13 +96,13 @@
         </div>
       </div>
 
-      <label>I'm Interested In (optional)</label>
+      <label>I'm Interested In — Tap All That Apply (optional)</label>
       <div class="checks" id="interests">
-        <label><input type="checkbox" value="Prepaid Maintenance (from $999)"> Prepaid Maintenance — from $999</label>
-        <label><input type="checkbox" value="Vehicle Service Contract (Major Guard, 0% financing)"> Vehicle Service Contract — Major Guard, 0% financing</label>
-        <label><input type="checkbox" value="Tire and Wheel Coverage ($950)"> Tire &amp; Wheel Coverage — $950</label>
-        <label><input type="checkbox" value="Key Replacement ($450)"> Key Replacement — $450</label>
-        <label><input type="checkbox" value="Ding and Dent ($600)"> Ding &amp; Dent — $600</label>
+        <label class="opt"><input type="checkbox" value="Prepaid Maintenance (from $999)"><span class="box"></span>Prepaid Maintenance<small>from $999</small></label>
+        <label class="opt"><input type="checkbox" value="Vehicle Service Contract (Major Guard, 0% financing)"><span class="box"></span>Vehicle Service Contract<small>0% financing</small></label>
+        <label class="opt"><input type="checkbox" value="Tire and Wheel Coverage ($950)"><span class="box"></span>Tire &amp; Wheel Coverage<small>$950</small></label>
+        <label class="opt"><input type="checkbox" value="Key Replacement ($450)"><span class="box"></span>Key Replacement<small>$450</small></label>
+        <label class="opt"><input type="checkbox" value="Ding and Dent ($600)"><span class="box"></span>Ding &amp; Dent<small>$600</small></label>
       </div>
 
       <button type="submit" id="sendBtn">Send My Vehicle Info</button>
@@ -125,6 +131,10 @@
     var o = document.createElement('option'); o.value = y; o.textContent = y; yearSel.appendChild(o);
   }
   var older = document.createElement('option'); older.value = '2007 or older'; older.textContent = '2007 or older'; yearSel.appendChild(older);
+
+  document.querySelectorAll('#interests input[type=checkbox]').forEach(function (c) {
+    c.addEventListener('change', function () { c.closest('.opt').classList.toggle('sel', c.checked); });
+  });
 
   document.getElementById('quoteForm').addEventListener('submit', function (e) {
     e.preventDefault();
