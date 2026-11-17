@@ -126,8 +126,14 @@ section{padding:84px 0;}
 .form-card input:focus,.form-card select:focus{outline:2px solid var(--gold);border-color:var(--gold);background:#fff;}
 .frow{display:flex;gap:12px;}
 .frow>div{flex:1;}
-.checks label{display:flex;align-items:center;gap:10px;font-size:14.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink);margin:0;padding:8px 2px;cursor:pointer;}
-.checks input{width:19px;height:19px;padding:0;accent-color:var(--gold-d);flex:none;}
+.checks{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.opt{display:flex;align-items:center;gap:13px;background:#F7F7F9;border:1.5px solid #E0E1E6;border-radius:14px;padding:15px 16px;margin:0;cursor:pointer;transition:.15s;font-size:15px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--ink);}
+.opt input{position:absolute;opacity:0;width:1px;height:1px;}
+.opt .box{flex:none;width:24px;height:24px;border:2px solid #C9CBD2;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;transition:.15s;}
+.opt.sel{background:#FBF6EA;border-color:var(--gold);}
+.opt.sel .box{background:var(--gold);border-color:var(--gold);}
+.opt.sel .box:before{content:"\2713";}
+.opt small{margin-left:auto;font-weight:700;color:var(--gold-d);white-space:nowrap;font-size:14px;}
 .form-card button{width:100%;margin-top:24px;padding:17px;background:var(--gold);color:#0B0B10;border:none;border-radius:12px;font-size:15px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;font-family:'Inter',sans-serif;}
 .form-card button:disabled{opacity:.6;}
 .f-note{text-align:center;font-size:12.5px;color:#8a8f98;padding-top:14px;line-height:19px;}
@@ -158,6 +164,51 @@ footer a{color:var(--gold);text-decoration:none;font-weight:600;}
 .mobile-bar .q{background:#fff;color:#0B0B10;border:1px solid var(--line);}}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;}
 .reveal.in{opacity:1;transform:none;}
+
+/* ===== Mobile luxury pass ===== */
+@media(max-width:640px){
+  .wrap{padding:0 18px;}
+  section{padding:58px 0;}
+  .nav-in{height:62px;}
+  .nav-in img{height:31px;}
+  .nav-links .btn{padding:10px 17px;font-size:13px;white-space:nowrap;}
+  .hero-in{padding:62px 0 54px;}
+  .hero h1{letter-spacing:0;}
+  .hero p{font-size:16px;line-height:25px;}
+  .hero-ctas{gap:10px;}
+  .hero-ctas .btn{flex:1;justify-content:center;padding:15px 10px;font-size:14px;}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:34px;}
+  .stat{min-width:0;text-align:center;padding:14px 8px;}
+  .stat b{font-size:18px;}
+  .sec-head{margin-bottom:32px;}
+  .sec-head p{font-size:15.5px;line-height:24px;}
+  .repair-card{padding:24px 18px;border-radius:20px;}
+  .pills{gap:8px;margin-bottom:24px;}
+  .pill{padding:10px 14px;font-size:13px;}
+  .vs{padding:20px 18px;}
+  .vs-row{font-size:13.5px;}
+  .plans,.addons,.steps{gap:16px;}
+  .plan{padding:30px 22px;text-align:center;}
+  .plan ul{text-align:left;}
+  .plan .price{font-size:44px;}
+  .plan .btn{display:flex;justify-content:center;}
+  .cov-panel{padding:26px 18px;border-radius:20px;}
+  .cov{padding:12px 0;}
+  .diagram{padding:10px;}
+  .addon .a-in{padding:26px 22px;text-align:center;}
+  .addon .btn{display:flex;justify-content:center;}
+  .step{padding:26px 22px;text-align:center;}
+  .step .num{margin:0 auto 14px;}
+  .form-card{padding:28px 20px;border-radius:20px;}
+  .frow{flex-direction:column;gap:0;}
+  .faq-q{padding:18px 20px;font-size:15px;}
+  .faq-a{padding:0 20px 18px;}
+  footer{padding:50px 0 132px;text-align:center;}
+  footer .f-brand{font-size:19px;line-height:27px;}
+  .f-links{justify-content:center;gap:18px;}
+  .fine{margin-left:auto;margin-right:auto;text-align:center;font-size:10.5px;line-height:16px;}
+  .mobile-bar{left:14px;right:14px;bottom:calc(10px + env(safe-area-inset-bottom));}
+}
 </style>
 </head>
 <body>
@@ -365,13 +416,13 @@ footer a{color:var(--gold);text-decoration:none;font-weight:600;}
           <div><label for="model">Model *</label><input id="model" type="text" placeholder="e.g. Escalade" required></div>
           <div><label for="miles">Current Miles *</label><input id="miles" type="number" inputmode="numeric" min="0" max="999999" placeholder="e.g. 45200" required></div>
         </div>
-        <label>I&rsquo;m Interested In (optional)</label>
+        <label>I&rsquo;m Interested In &mdash; Tap All That Apply (optional)</label>
         <div class="checks" id="interests">
-          <label><input type="checkbox" value="Prepaid Maintenance (from $999)"> Prepaid Maintenance &mdash; from $999</label>
-          <label><input type="checkbox" value="Vehicle Service Contract (Major Guard, 0% financing)"> Vehicle Service Contract &mdash; Major Guard, 0% financing</label>
-          <label><input type="checkbox" value="Tire and Wheel Coverage ($950)"> Tire &amp; Wheel Coverage &mdash; $950</label>
-          <label><input type="checkbox" value="Key Replacement ($450)"> Key Replacement &mdash; $450</label>
-          <label><input type="checkbox" value="Ding and Dent ($600)"> Ding &amp; Dent &mdash; $600</label>
+          <label class="opt"><input type="checkbox" value="Prepaid Maintenance (from $999)"><span class="box"></span>Prepaid Maintenance<small>from $999</small></label>
+          <label class="opt"><input type="checkbox" value="Vehicle Service Contract (Major Guard, 0% financing)"><span class="box"></span>Vehicle Service Contract<small>0% financing</small></label>
+          <label class="opt"><input type="checkbox" value="Tire and Wheel Coverage ($950)"><span class="box"></span>Tire &amp; Wheel Coverage<small>$950</small></label>
+          <label class="opt"><input type="checkbox" value="Key Replacement ($450)"><span class="box"></span>Key Replacement<small>$450</small></label>
+          <label class="opt"><input type="checkbox" value="Ding and Dent ($600)"><span class="box"></span>Ding &amp; Dent<small>$600</small></label>
         </div>
         <button type="submit" id="sendBtn">Send My Vehicle Info</button>
         <div class="f-note">Goes directly to our team at Randy Marion Cadillac of Jacksonville.<br>Prefer to text? <a href="sms:+19042360709">Text 904-236-0709</a></div>
@@ -494,6 +545,11 @@ document.querySelectorAll('.faq-q').forEach(function(q){
     document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); i.querySelector('.faq-q span').textContent = '+'; });
     if(!open){ item.classList.add('open'); q.querySelector('span').textContent = '\u2212'; }
   });
+});
+
+/* ---------- Interest toggles (multi-select) ---------- */
+document.querySelectorAll('#interests input[type=checkbox]').forEach(function(c){
+  c.addEventListener('change', function(){ c.closest('.opt').classList.toggle('sel', c.checked); });
 });
 
 /* ---------- Quote form ---------- */
