@@ -623,5 +623,226 @@ var io = new IntersectionObserver(function(entries){
 }, {threshold: .12});
 document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 </script>
+<!-- ===== Plans Assistant chat widget (cadillacplans.com) ===== -->
+<style>
+  #pa-bubble{position:fixed;right:18px;bottom:18px;z-index:1200;width:60px;height:60px;border-radius:50%;border:1px solid #C6A15B;background:#0B0B10;color:#C6A15B;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.45);transition:transform .15s ease}
+  #pa-bubble:hover{transform:translateY(-2px)}
+  #pa-bubble:focus-visible{outline:2px solid #C6A15B;outline-offset:3px}
+  #pa-bubble .pa-dot{position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#C6A15B;border:2px solid #0B0B10}
+  #pa-panel{position:fixed;right:18px;bottom:90px;z-index:1200;width:min(92vw,380px);height:min(68vh,560px);background:#101018;border:1px solid rgba(198,161,91,.45);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.55);display:none;flex-direction:column;overflow:hidden;font-family:'Inter',Arial,sans-serif}
+  #pa-panel.open{display:flex}
+  .pa-head{background:#0B0B10;padding:14px 16px;border-bottom:1px solid rgba(198,161,91,.35);display:flex;align-items:center;gap:10px}
+  .pa-head .pa-avatar{width:36px;height:36px;border-radius:50%;border:1px solid #C6A15B;color:#C6A15B;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',Georgia,serif;font-size:18px;flex:0 0 auto}
+  .pa-head h3{margin:0;color:#F4EEE3;font-family:'Fraunces',Georgia,serif;font-size:17px;font-weight:600}
+  .pa-head p{margin:1px 0 0;color:#B9B2A4;font-size:12px}
+  .pa-head button{margin-left:auto;background:none;border:0;color:#B9B2A4;font-size:22px;cursor:pointer;line-height:1;padding:4px}
+  #pa-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:#101018}
+  .pa-msg{max-width:86%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.45;white-space:pre-wrap;word-wrap:break-word}
+  .pa-bot{background:#1B1B26;color:#EFE9DC;border:1px solid rgba(198,161,91,.25);border-bottom-left-radius:4px;align-self:flex-start}
+  .pa-user{background:#C6A15B;color:#14100A;border-bottom-right-radius:4px;align-self:flex-end;font-weight:500}
+  .pa-msg a{color:#C6A15B;font-weight:600}
+  .pa-user a{color:#14100A}
+  #pa-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0 14px 10px;background:#101018}
+  .pa-chip{background:transparent;border:1px solid rgba(198,161,91,.55);color:#E7DCC4;border-radius:999px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+  .pa-chip:hover{background:rgba(198,161,91,.14)}
+  .pa-inputrow{display:flex;gap:8px;padding:11px 12px;border-top:1px solid rgba(198,161,91,.3);background:#0B0B10}
+  #pa-input{flex:1;background:#17171F;border:1px solid rgba(198,161,91,.35);border-radius:10px;color:#F4EEE3;padding:10px 12px;font-size:14px;font-family:inherit}
+  #pa-input::placeholder{color:#8E877A}
+  #pa-send{background:#C6A15B;color:#14100A;border:0;border-radius:10px;padding:0 16px;font-weight:700;cursor:pointer;font-size:14px}
+  @media (max-width:640px){
+    #pa-bubble{bottom:96px;right:14px}
+    #pa-panel{right:10px;left:10px;width:auto;bottom:168px;height:min(62vh,520px)}
+  }
+</style>
+
+<button id="pa-bubble" aria-label="Chat with the Plans Assistant" aria-haspopup="dialog">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <span class="pa-dot" aria-hidden="true"></span>
+</button>
+
+<div id="pa-panel" role="dialog" aria-label="Plans Assistant chat" aria-hidden="true">
+  <div class="pa-head">
+    <div class="pa-avatar">P</div>
+    <div>
+      <h3>Plans Assistant</h3>
+      <p>Randy Marion Cadillac &middot; instant answers</p>
+    </div>
+    <button id="pa-close" aria-label="Close chat">&times;</button>
+  </div>
+  <div id="pa-msgs" aria-live="polite"></div>
+  <div id="pa-chips"></div>
+  <form class="pa-inputrow" id="pa-form">
+    <input id="pa-input" type="text" placeholder="Ask about plans, coverage, prices..." autocomplete="off" aria-label="Type your message">
+    <button id="pa-send" type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+(function(){
+  var bubble=document.getElementById('pa-bubble'),
+      panel=document.getElementById('pa-panel'),
+      msgs=document.getElementById('pa-msgs'),
+      chips=document.getElementById('pa-chips'),
+      form=document.getElementById('pa-form'),
+      input=document.getElementById('pa-input'),
+      closeBtn=document.getElementById('pa-close'),
+      ENDPOINT='https://formsubmit.co/ajax/6980de37e4cba69ddb7d9540d1b211b7',
+      opened=false, mode='chat', escData={}, pendingQuestion='', fallbackCount=0;
+
+  var CHIP_SET=[
+    ['Plan prices','How much are the plans?'],
+    ["What's covered?",'What does the service contract cover?'],
+    ['Maintenance plan','Tell me about prepaid maintenance'],
+    ['Repair estimates','What do common repairs run?'],
+    ['Ask the team','I want to ask the team a question']
+  ];
+
+  var ANSWERS={
+    maintenance:"Our Prepaid Maintenance plan starts at $999 for 39 months / 39,000 miles. It includes:\n\u00BB Oil Change\n\u00BB Chassis Lubrication\n\u00BB Tire Rotation\n\u00BB Fluid Top-Offs\n\nThe exact price varies by vehicle model and miles. Want a number for your Cadillac? Text 904-236-0709 or tap Get My Quote below.",
+    coverage:"The Vehicle Service Contract (Ally Premier Protection Major Guard) covers the systems that produce the big repair bills:\n\u00BB Engine\n\u00BB Transmission / Drive Train\n\u00BB Electrical & High-Tech\n\u00BB Suspension & Wheel Drive\n\u00BB Steering\n\u00BB Cooling\n\u00BB Fuel System\n\u00BB Braking\n\u00BB Safety\n\u00BB A/C & Climate Control\n\nIt also includes 24/7 roadside assistance, trip interruption coverage, and alternate transportation, it's honored across the US and Canada, and it transfers to the next owner. (It's a vehicle service contract \u2014 not a warranty or insurance.)",
+    financing:"Every Vehicle Service Contract comes with Zero Percent Financing \u2014 you can split the plan into simple monthly payments at 0% instead of paying it all up front. No interest, no surprises.",
+    prices:"Here's the menu (all at Randy Marion Cadillac of Jacksonville):\n\u00BB Prepaid Maintenance \u2014 from $999 (39 months / 39K miles)\n\u00BB Vehicle Service Contract, Major Guard \u2014 priced by vehicle, with Zero Percent Financing\n\u00BB Tire & Wheel Coverage \u2014 $950 (72-month term)\n\u00BB Key Replacement \u2014 $450 (72-month term)\n\u00BB Ding & Dent \u2014 $600 (72-month term)\n\nFor an exact quote on your vehicle, text 904-236-0709.",
+    tire:"Tire & Wheel Coverage is $950 for a 72-month term. It covers road-hazard damage with tire and wheel repair or replacement, including curb damage \u2014 the flat-tire scenario nobody plans for.",
+    key:"Key Replacement is $450 for a 72-month term. Lose your fob or have it damaged, and replacement is handled \u2014 modern Cadillac keys are pricey on their own.",
+    dent:"Ding & Dent coverage is $600 for a 72-month term \u2014 paintless repair for the door dings and small dents that come with parking lots.",
+    repairs:"Real repair estimates for Cadillacs (RepairPal data) \u2014 this is what the service contract protects you from:\n\u00BB Alternator replacement \u2014 $529\u2013$782\n\u00BB A/C compressor \u2014 $914\u2013$1,186\n\u00BB Water pump \u2014 $1,240\u2013$1,672\n\u00BB A/C evaporator \u2014 $1,601\u2013$2,185\n\u00BB Suspension struts \u2014 $1,899\u2013$2,257\n\u00BB Head gasket \u2014 $2,000\u2013$2,500\n\nWith Major Guard, covered repairs like these come down to your deductible instead of the full bill.",
+    roadside:"Every Major Guard contract includes 24/7 roadside assistance, trip interruption benefits, and alternate transportation while your Cadillac is being repaired \u2014 honored anywhere in the US and Canada.",
+    transfer:"Yes \u2014 Major Guard coverage is transferable, so it can pass to the next owner if you sell your Cadillac. That helps resale value too.",
+    location:"We're Randy Marion Cadillac of Jacksonville, 4700 Southside Blvd, Jacksonville, FL 32216. For today's hours or to book, text us at 904-236-0709.",
+    hours:"Hours can shift around holidays, so the fastest way to confirm today's is to text us at 904-236-0709 \u2014 or ask the team here and we'll get you the answer.",
+    quote:"Easy \u2014 scroll to the quote form on this page and tell us your vehicle's year, make, model and miles, or text 904-236-0709 and we'll build your quote right there. Which vehicle are we quoting?",
+    thanks:"You're welcome! If anything else comes up \u2014 prices, coverage, or a quote for your Cadillac \u2014 I'm here. You can also text the team anytime at 904-236-0709."
+  };
+
+  function addMsg(text,who){
+    var d=document.createElement('div');
+    d.className='pa-msg '+(who==='user'?'pa-user':'pa-bot');
+    d.textContent=text;
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
+    return d;
+  }
+  function showChips(){
+    chips.innerHTML='';
+    CHIP_SET.forEach(function(c){
+      var b=document.createElement('button');
+      b.type='button'; b.className='pa-chip'; b.textContent=c[0];
+      b.addEventListener('click',function(){ handleUser(c[1]); });
+      chips.appendChild(b);
+    });
+  }
+  function clearChips(){ chips.innerHTML=''; }
+
+  function matchIntent(t){
+    var s=' '+t.toLowerCase()+' ';
+    function has(){ for(var i=0;i<arguments.length;i++){ if(s.indexOf(arguments[i])>-1) return true; } return false; }
+    if(has('ask the team','real person','human','agent','someone real','call me','talk to')) return 'human';
+    if(has('tire','wheel','flat','curb','pothole')) return 'tire';
+    if(has('key','fob')) return 'key';
+    if(has('ding','dent')) return 'dent';
+    if(has('maintenance','oil','rotation','prepaid','lube','fluid')) return 'maintenance';
+    if(has('transfer','sell my','next owner','resale')) return 'transfer';
+    if(has('roadside','tow','trip interruption','rental','alternate transportation')) return 'roadside';
+    if(has('financ','0%','zero percent','monthly','payment plan','pay over time','interest')) return 'financing';
+    if(has('alternator','compressor','water pump','evaporator','strut','gasket','repair cost','repair estimate','how much is a','how much does a')) return 'repairs';
+    if(has('cover','include','warranty','contract','major guard','ally','protect')) return 'coverage';
+    if(has('price','how much','cost','pricing')) return 'prices';
+    if(has('where','located','address','directions','location')) return 'location';
+    if(has('hour','open','close','when')) return 'hours';
+    if(has('quote','buy','sign up','get started','purchase','enroll')) return 'quote';
+    if(has('thank','thanks','great','perfect','awesome')) return 'thanks';
+    if(has('hello','hi ','hey','good morning','good afternoon')) return 'greeting';
+    return null;
+  }
+
+  function botReply(text){
+    var intent=matchIntent(text);
+    if(intent==='human'){ startEscalation(text); return; }
+    if(intent==='greeting'){ addMsg("Hi! I'm the Plans Assistant for Randy Marion Cadillac. Ask me about prepaid maintenance, service contract coverage, prices, or repair estimates \u2014 or tap a topic below.",'bot'); return; }
+    if(intent && ANSWERS[intent]){ fallbackCount=0; addMsg(ANSWERS[intent],'bot'); return; }
+    fallbackCount++;
+    if(fallbackCount>=2){ startEscalation(text); return; }
+    pendingQuestion=text;
+    addMsg("I want to give you the exact answer, not a guess. Tap \u201CAsk the team\u201D below and I'll pass your question straight to them \u2014 or try me on prices, coverage, or maintenance.",'bot');
+  }
+
+  function startEscalation(original){
+    clearChips();
+    if(original && matchIntent(original)==='human'){ pendingQuestion=''; }
+    else if(original){ pendingQuestion=original; }
+    mode='esc_name'; escData={};
+    addMsg("Of course \u2014 I'll send your question directly to the team at Randy Marion Cadillac. First, what's your name?",'bot');
+    input.placeholder='Your name';
+  }
+
+  function submitEscalation(){
+    mode='sending';
+    addMsg('Sending your question to the team...','bot');
+    fetch(ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        _subject:'Website Chat Question - '+escData.name,
+        _template:'table',
+        'Name':escData.name,
+        'Contact (cell or email)':escData.contact,
+        'Question':escData.question,
+        'Source':'cadillacplans.com chat assistant'
+      })
+    }).then(function(r){ return r.json(); }).then(function(){
+      mode='chat'; input.placeholder='Ask about plans, coverage, prices...';
+      addMsg("Sent \u2014 thank you, "+escData.name.split(' ')[0]+". The team has your question and will get back to you at "+escData.contact+". For anything urgent, text us at 904-236-0709.",'bot');
+      showChips();
+    }).catch(function(){
+      mode='chat'; input.placeholder='Ask about plans, coverage, prices...';
+      addMsg("Hmm, that didn't go through. Please text your question to 904-236-0709 and the team will take it from there.",'bot');
+      showChips();
+    });
+  }
+
+  function handleUser(text){
+    var t=(text||'').trim(); if(!t) return;
+    addMsg(t,'user');
+    if(mode==='esc_name'){
+      escData.name=t; mode='esc_contact';
+      addMsg("Thanks, "+t.split(' ')[0]+". What's the best way to reach you \u2014 a cell number or email?",'bot');
+      input.placeholder='Cell number or email';
+      return;
+    }
+    if(mode==='esc_contact'){
+      escData.contact=t;
+      if(pendingQuestion){ escData.question=pendingQuestion; submitEscalation(); }
+      else { mode='esc_question'; addMsg("And what's your question for the team?",'bot'); input.placeholder='Type your question'; }
+      return;
+    }
+    if(mode==='esc_question'){ escData.question=t; submitEscalation(); return; }
+    if(mode!=='chat') return;
+    botReply(t);
+  }
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=input.value; input.value='';
+    handleUser(v);
+  });
+
+  function toggle(open){
+    var willOpen=(typeof open==='boolean')?open:!panel.classList.contains('open');
+    panel.classList.toggle('open',willOpen);
+    panel.setAttribute('aria-hidden',willOpen?'false':'true');
+    if(willOpen && !opened){
+      opened=true;
+      addMsg("Welcome to Randy Marion Cadillac of Jacksonville. I'm the Plans Assistant \u2014 I can answer questions about our protection plans instantly, and anything I can't answer goes straight to the team. What can I help with?",'bot');
+      showChips();
+      setTimeout(function(){ input.focus(); },80);
+    }
+  }
+  bubble.addEventListener('click',function(){ toggle(); });
+  closeBtn.addEventListener('click',function(){ toggle(false); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') toggle(false); });
+})();
+</script>
+<!-- ===== /Plans Assistant chat widget ===== -->
+
 </body>
 </html>
