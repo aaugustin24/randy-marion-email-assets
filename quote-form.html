@@ -65,6 +65,12 @@
       <label for="phone">Cell Phone *</label>
       <input id="phone" name="Phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Best number to text your quote" required>
 
+      <label for="email">Email Address *</label>
+      <input id="email" name="Email" type="email" autocomplete="email" placeholder="We'll email your exact quote" required>
+
+      <label for="vin">VIN Number (optional)</label>
+      <input id="vin" name="VIN" type="text" autocomplete="off" maxlength="17" placeholder="17-character VIN — speeds up your quote" style="text-transform:uppercase">
+
       <div class="row">
         <div>
           <label for="year">Year *</label>
@@ -156,10 +162,13 @@
       _template: 'table',
       Name: document.getElementById('name').value,
       Phone: document.getElementById('phone').value,
+      Email: document.getElementById('email').value,
       Year: year, Make: make, Model: model,
       Miles: Number(miles).toLocaleString(),
       'Interested In': interests.length ? interests.join('; ') : 'Not specified'
     };
+    var vinVal = document.getElementById('vin').value.trim();
+    if (vinVal) payload.VIN = vinVal.toUpperCase();
 
     fetch('https://formsubmit.co/ajax/6980de37e4cba69ddb7d9540d1b211b7', {
       method: 'POST',
